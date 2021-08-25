@@ -14,6 +14,7 @@
     <h4 class="font-weight-bold text-center">发现精彩</h4>
     <column-list :list="list"></column-list>
     <button
+      style="display:flex;justify-content:center"
       class="btn btn-outline-primary mt-2 mb-5 mx-auto btn-block w-25"
     >
       加载更多
@@ -23,42 +24,20 @@
 
 <script lang="ts">
 import { defineComponent, computed, onMounted } from 'vue'
-import { useRoute } from 'vue-router'
+import { useStore } from 'vuex'
+import { GlobalDataProps } from '../store'
 import ColumnList from '../components/ColumnList.vue'
-const testData = [
-  {
-    id: 1,
-    title: '专栏1',
-    avatar: 'https://img2.baidu.com/it/u=2860557073,3347083343&fm=26&fmt=auto&gp=0.jpg',
-    description: '描述'
-  },
-  {
-    id: 2,
-    title: '专栏2',
-    avatar: 'https://img2.baidu.com/it/u=2860557073,3347083343&fm=26&fmt=auto&gp=0.jpg',
-    description: '描述aaaaaa'
-  },
-  {
-    id: 1,
-    title: '专栏1',
-    description: '描述'
-  },
-  {
-    id: 2,
-    title: '专栏2',
-    avatar: 'https://img2.baidu.com/it/u=2860557073,3347083343&fm=26&fmt=auto&gp=0.jpg',
-    description: '描述aaaaaa'
-  },
-]
+
 export default defineComponent({
   name: 'Home',
   components: {
     ColumnList
   },
   setup() {
+    const store = useStore<GlobalDataProps>()
+    const list = computed(()=>store.state.columns)
     return {
-      list: testData,
-
+      list
     }
   }
 })

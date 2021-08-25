@@ -65,9 +65,9 @@ export default defineComponent({
             emitter.emit('form-item-created',validateInput)
         })
         return {
-        inputRef,
-        validateInput,
-        updateValue
+            inputRef,
+            validateInput,
+            updateValue
         }
     }
 });
