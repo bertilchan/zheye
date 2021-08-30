@@ -2,7 +2,8 @@
     <!-- 代替console.log -->
     <!-- <pre>{{route}}</pre> -->
     <pre>{{currentId}}</pre>
-    <pre>{{list}}</pre>
+    <!-- <pre>{{list}}</pre> -->
+    <pre>{{ column }}</pre>
     <div class="column-detail-page w-75 mx-auto">
         <div class="column-info row mb-4 border-bottom pb-4 align-items-center" v-if="column">
             <div class="col-3 text-center">
@@ -46,9 +47,7 @@ export default defineComponent({
             // }
             return selectColumn
         })
-        console.log(store.getters);
-
-        
+        console.log(store.getters.getPostsByCid);
         const list = computed(() => store.getters.getPostsByCid(currentId))
         return {
             column,
