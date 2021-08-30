@@ -22,12 +22,10 @@ const store = createStore<GlobalDataProps>({
             return state.columns.filter(c => c.id > 2).length
         },
         getColumnById: (state)=>(id: number)=>{
-            console.log(1111);
-            
-            return state.columns.find(c => c.id === id )
+            return state.columns.find(c => c.id == id )
         },
         getPostsByCid: (state)=>(cid: number)=>{
-            return state.posts.filter(post => post.columnId === cid)
+            return state.posts.filter(post => post.columnId == cid)
         }
     }
 })
