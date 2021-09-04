@@ -3,21 +3,27 @@ export interface UserProps {
   name?: string;
   id?: number
 }
+export interface ImageProps {
+  _id?: string,
+  url?: string,
+  createdAt?: string
+}
 export interface ColumnProps {
-  id: number;
+  _id: string;
   title: string;
-  avatar?: string;
+  avatar?: ImageProps;
   description: string;
 }
 export interface PostProps {
-  id: number;
+  _id: number;
   title: string;
-  content: string;
-  image?: string;
+  excerpt?: string;
+  content?: string;
+  image?: ImageProps;
   createdAt: string;
-  columnId: number;
+  column: string;
 }
-export const testData: ColumnProps[] = [
+export const testData = [
   {
     id: 1,
     title: 'test1的专栏',
@@ -44,7 +50,7 @@ export const testData: ColumnProps[] = [
   }
 ]
 
-export const testPosts: PostProps[] = [
+export const testPosts = [
   {
     id: 1,
     title: '这是我的第一篇文章',
