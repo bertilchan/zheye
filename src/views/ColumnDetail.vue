@@ -4,7 +4,7 @@
     <div class="column-detail-page w-75 mx-auto">
         <div class="column-info row mb-4 border-bottom pb-4 align-items-center" v-if="column">
             <div class="col-3 text-center">
-                <img :src="column.avatar" :alt="column.title" class="rounded-circle border w-100">
+                <img :src="column.avatar && column.avatar.url" :alt="column.title" class="rounded-circle border w-100">
             </div>
             <div class="col-9">
                 <h4>{{column.title}}</h4>
@@ -33,10 +33,10 @@ export default defineComponent({
         const route = useRoute()
         const store = useStore<GlobalDataProps>()
         const currentId = route.params.id
-        // onMounted(() => {
-        //     store.dispatch('fetchColumn', currentId)
-        //     store.dispatch('fetchPosts', currentId)
-        // })
+        onMounted(() => {
+            store.dispatch('fetchColumn', currentId)
+            store.dispatch('fetchPosts', currentId)
+        })
         const column = computed(() => {
             const selectColumn = store.getters.getColumnById(currentId) as ColumnProps | undefined
             // if (selectColumn) {
@@ -44,7 +44,7 @@ export default defineComponent({
             // }
             return selectColumn
         })
-        console.log(store.getters.getPostsByCid);
+        // console.log(store.getters.getPostsByCid);
         const list = computed(() => store.getters.getPostsByCid(currentId))
         return {
             column,
