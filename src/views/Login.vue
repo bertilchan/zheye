@@ -54,16 +54,17 @@ export default defineComponent({
       { type: 'required', message: '密码不能为空' }
     ]
     const onFormSubmit = (result: boolean) => {
-      if(result) {
-        router.push('/')
-        store.commit('login')
+      if (result) {
+        const payload = {
+          email: emailVal.value,
+          password: passwordVal.value,
+          icode: '8B583DFE08F38B06'
+        }
+        store.dispatch('loginAndFetch', payload).then(data =>{
+          console.log(data);
+          router.push('/')
+        })
       }
-      // if (result) {
-      //   const payload = {
-      //     email: emailVal.value,
-      //     password: passwordVal.value
-      //   }
-      // }
     }
     return {
       emailRules,

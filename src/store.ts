@@ -2,6 +2,7 @@ import axios from 'axios'
 import { createStore, Commit } from 'vuex'
 import { testData,testPosts,ColumnProps,PostProps,UserProps } from './testData'
 export interface GlobalDataProps {
+    token: string,
     loading: boolean,
     columns: ColumnProps[],
     posts: PostProps[],
@@ -11,9 +12,14 @@ const getAndCommit = async (url: string, mutationsName: string, commit: Commit)=
     const { data } = await axios.get(url)
     commit(mutationsName, data)
 }
+const postAndCommit = async (url: string, mutationsName: string, commit: Commit, payload: any)=>{
+    const { data } = await axios.post(url, payload)
+    commit(mutationsName, data)
+}
 const store = createStore<GlobalDataProps>({
     // 全局状态
     state: {
+        token: '',
         loading: false,
         columns: [],
         posts: [],
@@ -21,9 +27,9 @@ const store = createStore<GlobalDataProps>({
     },
     //同步方法，用来修改state
     mutations: {
-        login(state) {
-            state.user = { ...state.user, isLogin: true, name: 'viking' }
-        },
+        // login(state) {
+        //     state.user = { ...state.user, isLogin: true, name: 'viking' }
+        // },
         fetchColumns(state, rawData) {
             state.columns = rawData.data.list
         },
@@ -35,7 +41,16 @@ const store = createStore<GlobalDataProps>({
         },
         setLoading(state,status) {
             state.loading = status
-        }
+        },
+        fetchCurrentUser(state,rawData) {
+            state.user = { isLogin: true, ...rawData.data }
+        },
+        login(state, rawData) {
+            const { token } = rawData.data
+            state.token = token
+            localStorage.setItem('token', token)
+            // axios.defaults.headers.common["token"] = `Bearer ${token}`
+        },
     },
     //异步请求，然后调用mutations里的方法来修改state
     actions: {
@@ -56,6 +71,17 @@ const store = createStore<GlobalDataProps>({
         },
         fetchPosts({ commit }, cid) {
             getAndCommit(`/columns/${cid}/posts`, 'fetchPosts', commit)
+        },
+        fetchCurrentUser({ commit }) {
+            getAndCommit('/user/current', 'fetchCurrentUser', commit)
+        },
+        login({ commit }, payload) {
+            postAndCommit('/user/login', 'login', commit, payload)
+        },
+        loginAndFetch({ dispatch }, loginData) {
+            return dispatch('login', loginData).then(()=>{
+                return dispatch('fetchCurrentUser')
+            })
         }
     },
     // store中的计算属性
