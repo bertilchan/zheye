@@ -19,7 +19,7 @@ const postAndCommit = async (url: string, mutationsName: string, commit: Commit,
 const store = createStore<GlobalDataProps>({
     // 全局状态
     state: {
-        token: '',
+        token: localStorage.getItem('item') || '',
         loading: false,
         columns: [],
         posts: [],
@@ -49,7 +49,7 @@ const store = createStore<GlobalDataProps>({
             const { token } = rawData.data
             state.token = token
             localStorage.setItem('token', token)
-            // axios.defaults.headers.common["token"] = `Bearer ${token}`
+            axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
         },
     },
     //异步请求，然后调用mutations里的方法来修改state

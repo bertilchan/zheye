@@ -25,7 +25,7 @@ axios.interceptors.response.use((config)=>{
 //   password: '111111',
 //   icode: '8B583DFE08F38B06'
 // }
-// axios.post('user/login',payload).then((res)=>{
+// axios.get('user/current',).then((res)=>{
 //   console.log(res.data);
   
 // })
