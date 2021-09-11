@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <global-header :user="currentUser"></global-header>
-    <loader v-if="loading"></loader>
+    <loader v-if="isLoading"></loader>
     <router-view></router-view>
     <footer class="text-center py-4 text-secondary bg-light mt-6">
       <small>
@@ -18,25 +18,44 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, ref, computed } from 'vue'
+import { defineComponent, reactive, ref, computed, watch, onMounted } from 'vue'
 import { useStore } from 'vuex'
+import axios from 'axios'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import GlobalHeader from '@/components/GlobalHeader.vue'
 import Loader from '@/components/Loader.vue'
+import createMessage from './components/createMessage'
 
 export default defineComponent({
   name: 'App',
   components: {
     GlobalHeader,
-    Loader
+    Loader,
   },
   setup() {
     const store = useStore()
     const currentUser = computed(()=>store.state.user)
-    const loading = computed(()=>store.state.loading)
+    const isLoading = computed(()=>store.state.loading)
+    const token = computed(()=>store.state.token)
+    const error = computed(()=>store.state.error)
+    // 这块的作用？？？
+    onMounted(() => {
+      if(!currentUser.value.isLogin && token.value) {
+        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
+        store.dispatch('fetchCurrentUser')
+      }
+    }),
+    // 两个回调？？？
+    watch(()=> error.value.status, ()=>{
+      const { status, message } = error.value
+      if(status && message) {
+        createMessage(message, 'error')
+      }
+    })
     return {
       currentUser,
-      loading
+      isLoading,
+      error
     }
   }
 })

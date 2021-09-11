@@ -7,6 +7,7 @@ import axios from 'axios'
 axios.defaults.baseURL = 'http://apis.imooc.com/api'
 axios.interceptors.request.use((config) =>{
     store.commit('setLoading', true)
+    store.commit('setError', { status: false, message: '' })
     config.params = { ...config.params, icode: '8B583DFE08F38B06' }
     let token = window.localStorage.getItem('token')
     if(token) {
@@ -19,6 +20,12 @@ axios.interceptors.response.use((config)=>{
         store.commit('setLoading', false)
       }, 500)
     return config
+},(e)=>{
+    console.log(e.response);
+    const { error } = e.response.data
+    store.commit('setError', { status: true, message: error })
+    store.commit('setLoading', false)
+    return Promise.reject(error)
 })
 // const payload = {
 //   email: '111@test.com',

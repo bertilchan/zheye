@@ -18,10 +18,8 @@ const getAndCommit = async (url: string, mutationsName: string, commit: Commit)=
     commit(mutationsName, data)
 }
 const postAndCommit = async (url: string, mutationsName: string, commit: Commit, payload: any)=>{
-    console.log(111);
     const { data } = await axios.post(url, payload)
     commit(mutationsName, data)
-    
 }
 const store = createStore<GlobalDataProps>({
     // 全局状态
