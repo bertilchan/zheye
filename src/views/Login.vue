@@ -61,7 +61,7 @@ export default defineComponent({
           icode: '8B583DFE08F38B06'
         }
         store.dispatch('loginAndFetch', payload).then(data =>{
-          console.log(data);
+          console.log(111111);
           router.push('/')
         })
       }

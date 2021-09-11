@@ -1,7 +1,12 @@
 import axios from 'axios'
 import { createStore, Commit } from 'vuex'
 import { testData,testPosts,ColumnProps,PostProps,UserProps } from './testData'
+export interface GlobalErrorProps {
+    status: boolean;
+    message?: string
+}
 export interface GlobalDataProps {
+    error: GlobalErrorProps,
     token: string,
     loading: boolean,
     columns: ColumnProps[],
@@ -13,12 +18,15 @@ const getAndCommit = async (url: string, mutationsName: string, commit: Commit)=
     commit(mutationsName, data)
 }
 const postAndCommit = async (url: string, mutationsName: string, commit: Commit, payload: any)=>{
+    console.log(111);
     const { data } = await axios.post(url, payload)
     commit(mutationsName, data)
+    
 }
 const store = createStore<GlobalDataProps>({
     // 全局状态
     state: {
+        error: { status: false },
         token: localStorage.getItem('item') || '',
         loading: false,
         columns: [],
@@ -41,6 +49,9 @@ const store = createStore<GlobalDataProps>({
         },
         setLoading(state,status) {
             state.loading = status
+        },
+        setError(state, e: GlobalErrorProps) {
+            state.error = e
         },
         fetchCurrentUser(state,rawData) {
             state.user = { isLogin: true, ...rawData.data }
@@ -78,10 +89,12 @@ const store = createStore<GlobalDataProps>({
         login({ commit }, payload) {
             postAndCommit('/user/login', 'login', commit, payload)
         },
-        loginAndFetch({ dispatch }, loginData) {
-            return dispatch('login', loginData).then(()=>{
-                return dispatch('fetchCurrentUser')
-            })
+        async loginAndFetch({ dispatch }, loginData) {
+            await dispatch('login',loginData)
+            await dispatch('fetchCurrentUser')
+            // return dispatch('login', loginData).then(()=>{
+            //     return dispatch('fetchCurrentUser')
+            // })
         }
     },
     // store中的计算属性
