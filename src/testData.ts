@@ -1,7 +1,11 @@
 export interface UserProps {
   isLogin: boolean;
-  name?: string;
-  id?: number
+  nickName?: string;
+  _id?: string;
+  column?: string;
+  email?: string;
+  avatar?: ImageProps;
+  description?: string;
 }
 export interface ImageProps {
   _id?: string,

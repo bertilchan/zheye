@@ -19,6 +19,7 @@ const emailReg = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0
 interface RuleProp {
   type: 'required' | 'email' | 'custom';
   message: string;
+  validator?: () => boolean;
 }
 export type RulesProp = RuleProp[]
 export default defineComponent({
@@ -45,6 +46,9 @@ export default defineComponent({
                             break
                         case 'email':
                             passed = emailReg.test(inputRef.val)
+                            break
+                        case 'custom':
+                            passed = rule.validator ? rule.validator() : true
                             break
                         default:
                             break
